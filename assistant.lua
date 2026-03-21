@@ -6,7 +6,10 @@ local lines = {
     "Quack Quack Quack ",
     "Quack Quack Quack Quack",
     "Quack Quack Quack Quack Quk",
-    "Im a Duck that says Quack Quack Quack!"
+    "Im a Duck that says Quack Quack Quack!",
+    "Quack Quack Quack Quack Quck",
+    "Quk",
+
 }
 
 local index = nil
