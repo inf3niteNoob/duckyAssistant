@@ -26,14 +26,18 @@ local exclamations             = nil
 local questions                = 0
 local questionsRegardingQuack  = 0
 local allTimeQuackCount        = 0
-local debugMode                = false
+local debugMenu                = false
 local debugStart               = false
 local userInput                = nil
 local validCommand             = false
+local armyStatus               = false
+local ducks                    = nil
+local cycles                   = nil
 
 -- Settings
 local startOfStreak = 3
 local startString   = [[
+
     $$$$$$$\  $$\   $$\  $$$$$$\  $$\   $$\ $$\     $$\         $$$$$$\   $$$$$$\   $$$$$$\  $$$$$$\  $$$$$$\ $$$$$$$$\  $$$$$$\  $$\   $$\ $$$$$$$$\ 
     $$  __$$\ $$ |  $$ |$$  __$$\ $$ | $$  |\$$\   $$  |       $$  __$$\ $$  __$$\ $$  __$$\ \_$$  _|$$  __$$\\__$$  __|$$  __$$\ $$$\  $$ |\__$$  __|
     $$ |  $$ |$$ |  $$ |$$ /  \__|$$ |$$  /  \$$\ $$  /        $$ /  $$ |$$ /  \__|$$ /  \__|  $$ |  $$ /  \__|  $$ |   $$ /  $$ |$$$$\ $$ |   $$ |   
@@ -74,13 +78,27 @@ local function debugAll()
     print("userInput: "                  .. (userInput or "nil"))
     print("index: "                      .. (index or "nil"))
     print("validCommand: "               .. tostring(validCommand))
-    print("debugMode: "                  .. tostring(debugMode) .. "\n")
+    print("debugMenu: "                  .. tostring(debugMenu) .. "\n")
 end
 
 local function testLines(i)
     print("\n" .. lines[i] .. "\n")
 end
 
+local function army(ducks,cycles)
+
+    armyStatus = true
+
+    while armyStatus do
+        for i = 1,cycles do 
+            for j = 1,ducks do
+                index = math.random(1, #lines)
+                print("\n" .. lines[index] .. "\n")
+            end
+        end
+        armyStatus = false
+    end
+end
 -------------------------------------------------------------------------------
 -- MAIN PROGRAM LOOP
 -------------------------------------------------------------------------------
@@ -108,16 +126,16 @@ while true do
     elseif userInput == "/seequack" then
         seequack()
 
-    elseif userInput == "/debugmode" then
-        userInput = getUserInput("Are you sure you want to use debug mode? (y/n)")
+    elseif userInput == "/debugMenu" then
+        userInput = getUserInput("Are you sure you want to use the debug menu? (y/n)")
         
         if userInput == "y" then
-            debugMode  = true
+            debugMenu  = true
             debugStart = true
 
-            while debugMode do
+            while debugMenu do
                 if debugStart then
-                    print("Debug Mode Activated!")
+                    print("Debug Menu Activated!")
                     debugStart = false
                 end
                 
@@ -125,8 +143,8 @@ while true do
                 userInput = string.lower(getUserInput("Enter a command:"))
 
                 if userInput == "/exit" then
-                    debugMode = false
-                    print("\nexited debug mode.\n")
+                    debugMenu = false
+                    print("\nexited debug menu.\n")
                     break
                 
                 elseif userInput == "/seequack" then
@@ -153,10 +171,21 @@ while true do
                     validCommand = false
                 end
 
-                if not validCommand and debugMode then
+                if not validCommand and debugMenu then
                     print("\nInvalid command.\n")
                 end
             end
+        end
+    elseif userInput == "/army" then
+
+        ducks = tonumber(getUserInput("Enter the number of ducks:"))
+        cycles = tonumber(getUserInput("Enter the number of cycles:"))
+
+        if ducks and cycles then
+            print("\nStarting duck army...\n")
+            army(ducks,cycles)
+        else
+            print("\nInvalid input for ducks or cycles.\n")
         end
     else
         -- Default behavior: Reset streak and print random quack
